@@ -1,4 +1,3 @@
-﻿  curves.cpp
-  Task.cpp
-  Создание кода...
+﻿  Task.cpp
+C:\Users\Igor\source\repos\Igor743646\CAD-Task\Task\Task\Task.cpp(66,52): warning C4267: инициализация: преобразование из "size_t" в "int"; возможна потеря данных
   Task.vcxproj -> C:\Users\Igor\source\repos\Igor743646\CAD-Task\Task\x64\Debug\Task.exe

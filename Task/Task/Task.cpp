@@ -4,10 +4,11 @@
 #include <random>
 #include <memory>
 #include <algorithm>
+#include <omp.h>
 
 using namespace std;
 using namespace curves;
-using test_type = long double;
+using test_type = float;
 using container_type = shared_ptr<Curve<test_type>>;
 constexpr test_type pi = numbers::pi_v<test_type>;
 
@@ -19,10 +20,11 @@ T floating_rand(T low, T high) {
 int main()
 {
     srand((unsigned int)time(nullptr));
+    omp_set_num_threads(4);
         
     vector<container_type> v;
 
-    const size_t vector_len = 10;
+    const size_t vector_len = 50;
 
     for (size_t i = 0; i < vector_len; i++) {
         int r_type = rand() % 3;
@@ -61,12 +63,17 @@ int main()
     });
 
     test_type total_sum = test_type(0.0);
+    int v_only_circles_size = v_only_circles.size();
 
-    for (auto& elem_p : v_only_circles) {
-        test_type r = dynamic_cast<Circle<test_type>*>(elem_p.get())->a;
-        total_sum += r;
+    #pragma omp parallel reduction(+:total_sum) 
+    {
+        #pragma omp for
+        for (int i = 0; i < v_only_circles_size; i++) {
+            test_type r = dynamic_cast<Circle<test_type>*>(v_only_circles[i].get())->a;
+            total_sum += r;
+        }
     }
-
+    
     cout << "Total sum of radii of all circles : " << total_sum << endl;
 
     return 0;
